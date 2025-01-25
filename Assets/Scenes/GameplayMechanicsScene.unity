@@ -357,6 +357,7 @@ GameObject:
   - component: {fileID: 837131341}
   - component: {fileID: 837131342}
   - component: {fileID: 837131343}
+  - component: {fileID: 837131344}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -524,6 +525,21 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
+--- !u!114 &837131344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837131338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad0755c12af55134896821eca1f5288e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitboxSize: {x: 4.17, y: 1}
+  hitboxOffset: {x: 2.6, y: 0}
+  hitboxColor: {r: 1, g: 0.052384935, b: 0, a: 0.5}
 --- !u!1 &2093960063
 GameObject:
   m_ObjectHideFlags: 0
