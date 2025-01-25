@@ -515,9 +515,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a3351cfa53ad464bbbe6eacbeb5b338, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rigidBody: {fileID: 837131341}
-  moveSpeed: 0
-  xInput: 0
+  moveSpeed: 1
+  jumpForce: 4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
