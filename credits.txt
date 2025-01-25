@@ -14,4 +14,12 @@ https://www.udemy.com/share/1095fO3@MrVZ1eq21fecOb_xzjFOwlDfpSbpHd5dtC5WOnvUAx4N
 
 3) Unity Helper. Jesus Angarita. ChatGPT Plugin. LLM used for generating code using ChatGPT.
 
-4) 
+4) Alex Dev. Basics of C# and Unity for Complete Beginners - Part 1.
+"8. First script ,input and movement".
+Code taken from his tutorial. Link to course:
+https://www.udemy.com/share/1095fO3@MrVZ1eq21fecOb_xzjFOwlDfpSbpHd5dtC5WOnvUAx4NlqA4DjGeZEEj9j1vIP2b/
+
+5) Alex Dev. Basics of C# and Unity for Complete Beginners - Part 1.
+"9. Jump of a charcater".
+Code taken from his tutorial. Link to course:
+https://www.udemy.com/share/1095fO3@MrVZ1eq21fecOb_xzjFOwlDfpSbpHd5dtC5WOnvUAx4NlqA4DjGeZEEj9j1vIP2b/
