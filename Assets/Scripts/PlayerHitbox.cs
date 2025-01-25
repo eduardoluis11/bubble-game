@@ -51,7 +51,7 @@ public class PlayerHitbox : MonoBehaviour
     public Color hitboxColor = new Color(1f, 1f, 0f, 0.5f); // Semi-transparent yellow for visualization
 
     private GameObject hitbox;
-    private SpriteRenderer renderer;
+    private new SpriteRenderer renderer; // Use 'new' keyword to hide inherited member
 
     // Start is called before the first frame update
     void Start()
@@ -106,7 +106,8 @@ public class PlayerHitbox : MonoBehaviour
         texture.SetPixel(0, 0, Color.white);
         texture.Apply();
 
-        return Sprite.Create(texture, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f));
+        // Create the sprite with Full Rect mesh type
+        return Sprite.Create(texture, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1, 0, SpriteMeshType.FullRect);
     }
 
     private void OnDrawGizmosSelected()

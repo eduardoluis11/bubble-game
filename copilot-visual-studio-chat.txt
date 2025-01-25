@@ -93,5 +93,186 @@ You are using the active document because you have the checkmark checked. You ca
 
 ====================================================================================================
 
+  This line of code is giving me this error in the unity editor: "Assets\Scripts\PlayerHitbox.cs(54,28): warning CS0108: 'PlayerHitbox.renderer' hides inherited member 'Component.renderer'. Use the new keyword if hiding was intended. ". Fix this bug.
+
+  ===
+
+
+  To fix the warning CS0108, you should use the new keyword to explicitly hide the inherited member Component.renderer. Here's the modified code:
+
+  public class PlayerHitbox : MonoBehaviour
+{
+    [Header("Hitbox Settings")]
+    public Vector2 hitboxSize = new Vector2(1f, 1f); // Adjust width and height in the editor
+    public Vector2 hitboxOffset = new Vector2(1f, 0f); // Adjust offset in the editor
+
+    [Header("Hitbox Visualization")]
+    public Color hitboxColor = new Color(1f, 1f, 0f, 0.5f); // Semi-transparent yellow for visualization
+
+    private GameObject hitbox;
+    private new SpriteRenderer renderer; // Use 'new' keyword to hide inherited member
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        // Create the hitbox object
+        hitbox = new GameObject("Hitbox");
+        hitbox.transform.SetParent(transform); // Attach it to the player
+        hitbox.SetActive(false);
+
+        // Add a BoxCollider2D for the hitbox functionality
+        BoxCollider2D boxCollider = hitbox.AddComponent<BoxCollider2D>();
+        boxCollider.isTrigger = true;
+
+        // Add a SpriteRenderer for hitbox visualization (optional)
+        renderer = hitbox.AddComponent<SpriteRenderer>();
+        renderer.color = hitboxColor;
+        renderer.sprite = CreateHitboxSprite(); // Creates a simple square sprite
+        renderer.drawMode = SpriteDrawMode.Sliced;
+        renderer.size = hitboxSize;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        // Enable the hitbox when "E" is held down
+        if (Input.GetKey(KeyCode.E))
+        {
+            hitbox.SetActive(true);
+            UpdateHitbox();
+
+            // DEBUG: Log a message when the hitbox is enabled in the console
+            Debug.Log("Hitbox enabled. You're shooting bubbles.");
+        }
+        else
+        {
+            hitbox.SetActive(false);
+        }
+    }
+
+    private void UpdateHitbox()
+    {
+        hitbox.transform.localPosition = (Vector3)hitboxOffset;
+        BoxCollider2D boxCollider = hitbox.GetComponent<BoxCollider2D>();
+        boxCollider.size = hitboxSize;
+
+        renderer.size = hitboxSize;
+    }
+
+    private Sprite CreateHitboxSprite()
+    {
+        Texture2D texture = new Texture2D(1, 1);
+        texture.SetPixel(0, 0, Color.white);
+        texture.Apply();
+
+        return Sprite.Create(texture, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f));
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = hitboxColor;
+        Gizmos.DrawWireCube(transform.position + (Vector3)hitboxOffset, hitboxSize);
+    }
+}
+
+
+
+Explanation:
+•	Added the new keyword to the renderer declaration to explicitly hide the inherited member Component.renderer. This resolves the warning CS0108.
+
+=======================================================================
+
+
+  This line of code is giving me this error: "Sprite Tiling might not appear correctly because the Sprite used is not generated with Full Rect. To fix this, change the Mesh Type in the Sprite's import setting to Full Rect UnityEngine.StackTraceUtility:ExtractStackTrace () PlayerHitbox:Start () (at Assets/Scripts/PlayerHitbox.cs:72)". Fix it.
+
+  ===
+
+  To fix the error related to the sprite tiling, you need to ensure that the sprite's import settings are set to "Full Rect". This can be done in the Unity Editor. However, since we are focusing on the script, you can also modify the sprite creation process to ensure it uses the correct settings.
+Here's the modified code to ensure the sprite is created with the correct settings:
+
+
+public class PlayerHitbox : MonoBehaviour
+{
+    [Header("Hitbox Settings")]
+    public Vector2 hitboxSize = new Vector2(1f, 1f); // Adjust width and height in the editor
+    public Vector2 hitboxOffset = new Vector2(1f, 0f); // Adjust offset in the editor
+
+    [Header("Hitbox Visualization")]
+    public Color hitboxColor = new Color(1f, 1f, 0f, 0.5f); // Semi-transparent yellow for visualization
+
+    private GameObject hitbox;
+    private new SpriteRenderer renderer; // Use 'new' keyword to hide inherited member
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        // Create the hitbox object
+        hitbox = new GameObject("Hitbox");
+        hitbox.transform.SetParent(transform); // Attach it to the player
+        hitbox.SetActive(false);
+
+        // Add a BoxCollider2D for the hitbox functionality
+        BoxCollider2D boxCollider = hitbox.AddComponent<BoxCollider2D>();
+        boxCollider.isTrigger = true;
+
+        // Add a SpriteRenderer for hitbox visualization (optional)
+        renderer = hitbox.AddComponent<SpriteRenderer>();
+        renderer.color = hitboxColor;
+        renderer.sprite = CreateHitboxSprite(); // Creates a simple square sprite
+        renderer.drawMode = SpriteDrawMode.Sliced;
+        renderer.size = hitboxSize;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        // Enable the hitbox when "E" is held down
+        if (Input.GetKey(KeyCode.E))
+        {
+            hitbox.SetActive(true);
+            UpdateHitbox();
+
+            // DEBUG: Log a message when the hitbox is enabled in the console
+            Debug.Log("Hitbox enabled. You're shooting bubbles.");
+        }
+        else
+        {
+            hitbox.SetActive(false);
+        }
+    }
+
+    private void UpdateHitbox()
+    {
+        hitbox.transform.localPosition = (Vector3)hitboxOffset;
+        BoxCollider2D boxCollider = hitbox.GetComponent<BoxCollider2D>();
+        boxCollider.size = hitboxSize;
+
+        renderer.size = hitboxSize;
+    }
+
+    private Sprite CreateHitboxSprite()
+    {
+        Texture2D texture = new Texture2D(1, 1);
+        texture.SetPixel(0, 0, Color.white);
+        texture.Apply();
+
+        // Create the sprite with Full Rect mesh type
+        return Sprite.Create(texture, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1, 0, SpriteMeshType.FullRect);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = hitboxColor;
+        Gizmos.DrawWireCube(transform.position + (Vector3)hitboxOffset, hitboxSize);
+    }
+}
+
+
+
+Explanation:
+•	Modified the CreateHitboxSprite method to create the sprite with SpriteMeshType.FullRect. This ensures the sprite is generated with the correct mesh type to avoid tiling issues.
+
+==========================================================================================
+
 
 
