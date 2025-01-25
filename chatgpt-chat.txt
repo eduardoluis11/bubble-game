@@ -110,3 +110,150 @@ Let me know if you need further clarification or enhancements!
 
 ====================================================================================================================
 
+Thanks! However, when I press the "e" key, the hitbox isn't rendered on screen. I want to render the hitbox onscreen, since I will later on replace it by a sprite to show the player's attach when they hit "e". So, could you add a snippet to the code that you gave me to render onscreen on the "front-end" of the game the hitbox?
+
+
+====
+
+Ah, I see the issue now! The `SpriteRenderer` in the original code is used for visualizing the hitbox but doesn't actually 
+render on-screen in the game view because Unity's default `SpriteRenderer` requires a valid sprite and proper setup.
+
+Let me adjust the code so that the hitbox is rendered **on-screen** using the `SpriteRenderer`. This will ensure you can see 
+the hitbox when you press "E."
+
+---
+
+### Updated Script: `PlayerHitbox.cs`
+
+```csharp
+using UnityEngine;
+
+public class PlayerHitbox : MonoBehaviour
+{
+    [Header("Hitbox Settings")]
+    public Vector2 hitboxSize = new Vector2(1f, 1f); // Adjust width and height in the editor
+    public Vector2 hitboxOffset = new Vector2(1f, 0f); // Adjust offset in the editor
+
+    [Header("Hitbox Visualization")]
+    public Color hitboxColor = new Color(1f, 1f, 0f, 0.5f); // Semi-transparent yellow for visualization
+
+    private GameObject hitbox;
+
+    private void Start()
+    {
+        // Create the hitbox object
+        hitbox = new GameObject("Hitbox");
+        hitbox.transform.SetParent(transform); // Attach it to the player
+        hitbox.transform.localPosition = hitboxOffset; // Position it based on offset
+        hitbox.SetActive(false);
+
+        // Add a BoxCollider2D for functionality
+        BoxCollider2D boxCollider = hitbox.AddComponent<BoxCollider2D>();
+        boxCollider.isTrigger = true;
+
+        // Add a SpriteRenderer to render the hitbox on-screen
+        SpriteRenderer renderer = hitbox.AddComponent<SpriteRenderer>();
+        renderer.sprite = CreateHitboxSprite(); // Creates a visible square sprite
+        renderer.color = hitboxColor; // Set the hitbox color
+        renderer.sortingOrder = 10; // Ensure it's rendered above other elements
+    }
+
+    private void Update()
+    {
+        // Enable the hitbox when "E" is held down
+        if (Input.GetKey(KeyCode.E))
+        {
+            hitbox.SetActive(true);
+            UpdateHitbox();
+        }
+        else
+        {
+            hitbox.SetActive(false);
+        }
+    }
+
+    private void UpdateHitbox()
+    {
+        // Update the hitbox position and size
+        hitbox.transform.localPosition = hitboxOffset;
+
+        BoxCollider2D boxCollider = hitbox.GetComponent<BoxCollider2D>();
+        boxCollider.size = hitboxSize;
+
+        SpriteRenderer renderer = hitbox.GetComponent<SpriteRenderer>();
+        renderer.transform.localScale = hitboxSize; // Scale the sprite to match the hitbox size
+    }
+
+    private Sprite CreateHitboxSprite()
+    {
+        // Create a simple white square sprite dynamically
+        Texture2D texture = new Texture2D(1, 1);
+        texture.SetPixel(0, 0, Color.white);
+        texture.Apply();
+
+        return Sprite.Create(texture, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f));
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // Draw the hitbox in the editor for debugging
+        Gizmos.color = hitboxColor;
+        Gizmos.DrawWireCube(transform.position + (Vector3)hitboxOffset, hitboxSize);
+    }
+}
+```
+
+---
+
+### Key Updates in the Script:
+
+1. **Rendering the Hitbox On-Screen:**
+   - A `SpriteRenderer` now uses a dynamically generated white square sprite (`CreateHitboxSprite()`).
+   - The `transform.localScale` of the `SpriteRenderer` is updated to match the `hitboxSize`.
+
+2. **Sorting Order:**
+   - The `SpriteRenderer.sortingOrder` is set to `10` so that the hitbox renders above other elements in your scene.
+
+3. **Dynamic Updates:**
+   - The hitbox's position (`hitboxOffset`) and size (`hitboxSize`) are updated in real-time in the `UpdateHitbox()` method.
+
+4. **Visibility While Holding "E":**
+   - The `hitbox.SetActive(true)` ensures the hitbox is rendered in the game view when holding down the "E" key.
+
+---
+
+### How It Works:
+
+1. Attach this script to your player GameObject.
+2. In the Unity editor:
+   - Adjust `Hitbox Size` to the desired dimensions of the hitbox.
+   - Set `Hitbox Offset` to position the hitbox relative to the player.
+   - Customize `Hitbox Color` for better visibility during development.
+
+3. **Play the game:**
+   - When you press and hold "E," the yellow square (hitbox) will render in front of the player.
+   - Release "E" to hide the hitbox.
+
+---
+
+### Next Steps:
+You can replace the dynamically created sprite with your own custom sprite (e.g., an attack animation) by assigning it to the `SpriteRenderer` component. Let me know if you'd like help implementing that!
+
+====================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
