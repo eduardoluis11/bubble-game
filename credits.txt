@@ -1,0 +1,17 @@
+# Credits
+
+## Author
+
+Game made by Eduardo Salinas.
+
+## References and other sources
+
+1) Alex Dev. Basics of C# and Unity for Complete Beginners - Part 1. "7. Example of using rigidbody and collider". 
+Code taken from his tutorial. Link to course:
+https://www.udemy.com/share/1095fO3@MrVZ1eq21fecOb_xzjFOwlDfpSbpHd5dtC5WOnvUAx4NlqA4DjGeZEEj9j1vIP2b/
+
+2) Github's Copilot. LLM used.
+
+3) Unity Helper. Jesus Angarita. ChatGPT Plugin. LLM used for generating code using ChatGPT.
+
+4) 
