@@ -11,54 +11,6 @@ Here's the script for the enemy:
 
 ---
 
-### Script: `Enemy.cs`
-
-```csharp
-using UnityEngine;
-
-public class Enemy : MonoBehaviour
-{
-    [Header("Knockback Settings")]
-    public float knockbackForce = 5f; // How strong the push-back effect is
-    public Vector2 knockbackDirection = Vector2.zero; // Direction is calculated dynamically
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // Check if the object colliding is the player
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            // Get the Rigidbody2D of the player
-            Rigidbody2D playerRb = collision.gameObject.GetComponent<Rigidbody2D>();
-
-            if (playerRb != null)
-            {
-                // Calculate the direction from the enemy to the player
-                Vector2 pushDirection = (collision.transform.position - transform.position).normalized;
-
-                // Apply knockback force to the player
-                playerRb.AddForce(pushDirection * knockbackForce, ForceMode2D.Impulse);
-            }
-        }
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        // Ensure the player doesn't "stand" on top of the enemy
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Rigidbody2D playerRb = collision.gameObject.GetComponent<Rigidbody2D>();
-
-            if (playerRb != null)
-            {
-                // Push the player away continuously
-                Vector2 pushDirection = (collision.transform.position - transform.position).normalized;
-                playerRb.AddForce(pushDirection * knockbackForce * Time.deltaTime, ForceMode2D.Impulse);
-            }
-        }
-    }
-}
-```
-
 ---
 
 ### How It Works:
@@ -109,41 +61,94 @@ the push-back effect.
 - This solution assumes the player uses a `Rigidbody2D` for movement.
 - If you use a custom movement script for the player that overrides physics, you might need 
 to add logic to momentarily disable player controls during knockback.
-
-Let me know if you'd like help with any additional adjustments!
  * 
- * 
- * To modify the code so that the player moves 20 units to the left whenever they collide with the enemy, you can 
+ * To modify the code so that the player moves some units to the left whenever they collide with the enemy, you can 
  * directly set the player's position in the OnCollisionEnter2D and OnCollisionStay2D methods.
  * 
  * Explanation:
 •	Added a new method MovePlayerLeft that moves the player 20 units to the left by directly setting the player's position.
 •	Updated the OnCollisionEnter2D and OnCollisionStay2D methods to call MovePlayerLeft instead of ApplyKnockback.
 This will ensure that the player is moved 20 units to the left whenever they collide with the enemy.
+ *
+ * 
+ *
+ *
+ * Absolutely! To implement the behavior where the enemy turns into a circle when it is inside the player's hitbox during an attack, we can use a 
+ * boolean to keep track of whether the enemy is already a circle. If the player presses the "e" key and the enemy is within the hitbox, the enemy 
+ * will transform into a circle GameObject.
+
+Here’s the **snippet** for this logic:
+
+---
+
+### Key Points:
+
+1. **Boolean `isCircle`:**
+   - This tracks whether the enemy has already been transformed into a circle. It prevents repeated transformations if the hitbox repeatedly overlaps the enemy.
+
+2. **Hitbox Detection:**
+   - The script listens for collisions via the `OnTriggerEnter2D` method. This assumes the player's hitbox is a trigger Collider2D tagged as `PlayerHitbox`.
+
+3. **Transforming into a Circle:**
+   - The enemy spawns a new GameObject (a circle) at its current position using `Instantiate()`.
+   - After spawning the circle, the original enemy is destroyed using `Destroy(gameObject)` or deactivated with `gameObject.SetActive(false)` if you want to keep the original object around for debugging or other logic.
+
+4. **Circle Prefab:**
+   - Create a **circle prefab** in Unity (e.g., a simple circular sprite with a `SpriteRenderer`) and assign it to the `circlePrefab` field in the Unity Editor.
+
+---
+
+### Setup in Unity:
+
+1. **Player Hitbox:**
+   - The player's hitbox (yellow square in your game) must have:
+     - A `Collider2D` component set to `Is Trigger = true`.
+     - The tag `PlayerHitbox`.
+
+2. **Enemy Object:**
+   - Attach the `Enemy` script to your enemy (red square).
+   - Assign the `circlePrefab` in the Unity Editor to a circular GameObject prefab.
+
+3. **Circle Prefab:**
+   - Create a new GameObject in Unity with a circular sprite (or any shape you like).
+   - Turn it into a prefab by dragging it into the `Assets` folder.
+
+---
+
+### Optional: Player Script Modification
+
+You’ll also need to ensure the player's hitbox is active when the player presses the "e" key. From the script you provided earlier, this is already handled by enabling and disabling the hitbox.
+
+Make sure the hitbox has the correct tag (`PlayerHitbox`), and everything should work smoothly.
  */
 
 public class Enemy : MonoBehaviour
 {
 
-
+    // Knockback Distance
     [Header("Knockback Settings")]
 
     // Distance to move the player to the left. I made it public so that I can adjust it in the Unity Editor.
-    public float knockbackDistance = 20f; 
+    public float knockbackDistance = 20f;
 
     //public float knockbackForce = 5f; // How strong the push-back effect is
     //public float verticalKnockbackMultiplier = 1.5f; // Optional: Amplify vertical knockback if needed
     //public float horizontalKnockbackMultiplier = 1f; // Multiplier for horizontal knockback
 
+    // This handles the variables in the unity editor that will be used to transform the enemy into a bubble
+    [Header("Enemy Transformation Into Bubble")]
+    public bool isCircle = false; // Tracks whether the enemy is currently a circle
+    public GameObject bubbleContainerPrefab; // Reference to the circle prefab to spawn
 
-    /* This will make it so that, if the player collides with the enemy, the player will be pushed back to the left.
-     * 
-     * That is, if the player touches the enemy at any angle, be it by touching him from any side, or by jumping on top 
-     * of him, the player will be pushed back to the left. This will prevent the player form being able to use the enemy
-     * as a platform if the enemy is outside of a bubble.
-     * 
-     * 
-     */
+
+/* This will make it so that, if the player collides with the enemy, the player will be pushed back to the left.
+ * 
+ * That is, if the player touches the enemy at any angle, be it by touching him from any side, or by jumping on top 
+ * of him, the player will be pushed back to the left. This will prevent the player form being able to use the enemy
+ * as a platform if the enemy is outside of a bubble.
+ * 
+ * 
+ */
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Check if the object colliding is the player
@@ -162,6 +167,40 @@ public class Enemy : MonoBehaviour
                 //ApplyKnockback(collision, playerRb);
             }
         }
+    }
+
+    /* This method will transform the enemy into a bubble when the player attacks the enemy with his bubble magic attack.
+     * 
+     * That is, if the enemy is within the player's hitbox from the bubble attack, the enemy will be transformed into a circle.
+     * 
+     * 
+     */
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // Check if the colliding object is the player's hitbox
+        if (collision.CompareTag("PlayerHitbox") && !isCircle)
+        {
+            // Transform the enemy into a circle
+            TransformIntoCircle();
+        }
+    }
+
+    /* This transform the enemy into a circle, that is, it will enclose the enemy within a bubble.
+     * 
+     */
+    private void TransformIntoCircle()
+    {
+        // Set the isCircle flag to true
+        isCircle = true;
+
+        // Instantiate the circle GameObject at the enemy's position
+        GameObject circle = Instantiate(bubbleContainerPrefab, transform.position, Quaternion.identity);
+
+        // This destroys the original enemy object with the original sprite, so that only the bubble container is left.
+        Destroy(gameObject);
+
+        // Alternatively, disable the current enemy GameObject
+        // gameObject.SetActive(false);
     }
 
     //private void OnCollisionStay2D(Collision2D collision)
