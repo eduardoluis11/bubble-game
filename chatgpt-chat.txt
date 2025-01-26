@@ -1,4 +1,67 @@
-﻿Thanks. Now, I added a rectangle game object which will act as a door. I want to create a script for the door so that, if the player presses the up arrow key while colliding with the door, to change into another scene. For instance, let's make the player go to a scene called "VictoryScreen". Please, create the script that lets me do this. Do I have to add a trigger to the door?
+﻿Thanks. However, now I have a bug in which the door's sprite is overlapping the player's sprite. That is, the door sprite is getting in front of the player, so the player gets hidden behind the door. It should be the other way around: the player should be in front of the door. That is, I need to change the "z-index" of the door so that it gets behind the player. How can I do this? 
+
+
+Great question! To make sure the **door sprite** appears behind the **player sprite**, you can adjust their **sorting layers** or their **z-axis position**. Here's how you can fix the overlap issue:
+
+---
+
+### Option 1: Adjust the **Sorting Layer**
+Sprites in Unity use **Sorting Layers** to control their rendering order. Higher sorting layers render in front of lower ones.
+
+#### Steps:
+1. **Create Sorting Layers**:
+   - Go to the **Inspector** window of any sprite.
+   - Click the dropdown next to `Sorting Layer`, then click **Add Sorting Layer...**.
+   - In the **Tags and Layers** menu, add a new layer called `Player` and another called `Background` (or `Door`).
+   - Close the menu.
+
+2. **Assign Sorting Layers**:
+   - Select the **Player GameObject** and set its `Sorting Layer` to `Player`.
+   - Select the **Door GameObject** and set its `Sorting Layer` to `Background` or `Door`.
+
+3. **Optional Sorting Order**:
+   - Sorting layers work like tiers, but within a layer, you can also adjust the **Order in Layer** value.
+   - For example:
+     - Player: `Sorting Layer = Player`, `Order in Layer = 0`
+     - Door: `Sorting Layer = Door`, `Order in Layer = -1`
+
+---
+
+### Option 2: Adjust the **z-axis Position**
+Sprites are rendered based on their **z-position** if they are on the same sorting layer. Lower z-values are rendered first (behind).
+
+#### Steps:
+1. **Adjust Player and Door Positions**:
+   - Set the **z-position** of the player to `0` (or a smaller negative value, e.g., `-0.1f`).
+   - Set the **z-position** of the door to something greater than the player, e.g., `0.1f`.
+
+2. **How to Adjust z-position**:
+   - Select the **Player GameObject** and **Door GameObject**.
+   - In the **Transform** component of the Inspector, change the **z** value.
+
+---
+
+### Option 3: Ensure Proper Sprite Sorting (If Using Sprite Renderers)
+
+If you’re only using **Sprite Renderers**, Unity defaults to **z-position** rendering if the sprites are on the same `Sorting Layer`.
+
+- **Player's Sprite Renderer**:
+  - Check the `Sorting Layer` and `Order in Layer` under the **Sprite Renderer** component.
+  - Make sure the player's sorting order is higher than the door's.
+
+---
+
+### Recommendation:
+For most 2D games, using **Sorting Layers** is the cleanest way to manage the rendering order of sprites, as it avoids accidental overlaps due to z-axis values.
+
+Let me know if you need clarification or further assistance! 😊
+
+
+
+
+============================================================================================================================
+
+Thanks. Now, I added a rectangle game object which will act as a door. I want to create a script for the door so that, if the player presses the up arrow key while colliding with the door, to change into another scene. For instance, let's make the player go to a scene called "VictoryScreen". Please, create the script that lets me do this. Do I have to add a trigger to the door?
 
 
 
