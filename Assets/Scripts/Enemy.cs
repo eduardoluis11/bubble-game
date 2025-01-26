@@ -113,7 +113,13 @@ to add logic to momentarily disable player controls during knockback.
 Let me know if you'd like help with any additional adjustments!
  * 
  * 
+ * To modify the code so that the player moves 20 units to the left whenever they collide with the enemy, you can 
+ * directly set the player's position in the OnCollisionEnter2D and OnCollisionStay2D methods.
  * 
+ * Explanation:
+•	Added a new method MovePlayerLeft that moves the player 20 units to the left by directly setting the player's position.
+•	Updated the OnCollisionEnter2D and OnCollisionStay2D methods to call MovePlayerLeft instead of ApplyKnockback.
+This will ensure that the player is moved 20 units to the left whenever they collide with the enemy.
  */
 
 public class Enemy : MonoBehaviour
@@ -121,9 +127,13 @@ public class Enemy : MonoBehaviour
 
 
     [Header("Knockback Settings")]
-    public float knockbackForce = 5f; // How strong the push-back effect is
-    public float verticalKnockbackMultiplier = 1.5f; // Optional: Amplify vertical knockback if needed
-    public float horizontalKnockbackMultiplier = 1f; // Multiplier for horizontal knockback
+
+    // Distance to move the player to the left. I made it public so that I can adjust it in the Unity Editor.
+    public float knockbackDistance = 20f; 
+
+    //public float knockbackForce = 5f; // How strong the push-back effect is
+    //public float verticalKnockbackMultiplier = 1.5f; // Optional: Amplify vertical knockback if needed
+    //public float horizontalKnockbackMultiplier = 1f; // Multiplier for horizontal knockback
 
 
     /* This will make it so that, if the player collides with the enemy, the player will be pushed back to the left.
@@ -144,8 +154,10 @@ public class Enemy : MonoBehaviour
 
             if (playerRb != null)
             {
-                // Move the player some units to the left
-                playerRb.position = new Vector2(playerRb.position.x - 5f, playerRb.position.y);
+                // Move the player some units to the left. The units can be adjusted in the Unity Editor.
+                playerRb.position = new Vector2(playerRb.position.x - knockbackDistance, playerRb.position.y);
+
+                //playerRb.position = new Vector2(playerRb.position.x - 5f, playerRb.position.y);
 
                 //ApplyKnockback(collision, playerRb);
             }

@@ -327,7 +327,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 1
+  m_Constraints: 4
 --- !u!61 &477558868
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -385,9 +385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ad974c2bc9b7674b9d25a794ec1031c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  knockbackForce: 5
-  verticalKnockbackMultiplier: 1.5
-  horizontalKnockbackMultiplier: 1
+  knockbackDistance: 5
 --- !u!1 &494348640
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,7 +689,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a3351cfa53ad464bbbe6eacbeb5b338, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
+  moveSpeed: 4
   jumpForce: 6
   groundCheckRadius: 0.12
   groundCheck: {fileID: 2093960064}
