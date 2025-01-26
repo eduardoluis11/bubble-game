@@ -120,6 +120,11 @@ Here’s the **snippet** for this logic:
 You’ll also need to ensure the player's hitbox is active when the player presses the "e" key. From the script you provided earlier, this is already handled by enabling and disabling the hitbox.
 
 Make sure the hitbox has the correct tag (`PlayerHitbox`), and everything should work smoothly.
+
+* 
+*
+*
+*
  */
 
 public class Enemy : MonoBehaviour
@@ -140,19 +145,22 @@ public class Enemy : MonoBehaviour
     public bool isCircle = false; // Tracks whether the enemy is currently a circle
     public GameObject bubbleContainerPrefab; // Reference to the circle prefab to spawn
 
+    private GameObject currentBubble; // Reference to the current bubble instance as a "global" variable
 
-/* This will make it so that, if the player collides with the enemy, the player will be pushed back to the left.
- * 
- * That is, if the player touches the enemy at any angle, be it by touching him from any side, or by jumping on top 
- * of him, the player will be pushed back to the left. This will prevent the player form being able to use the enemy
- * as a platform if the enemy is outside of a bubble.
- * 
- * 
- */
+
+    /* This will make it so that, if the player collides with the enemy, the player will be pushed back to the left.
+     * 
+     * That is, if the player touches the enemy at any angle, be it by touching him from any side, or by jumping on top 
+     * of him, the player will be pushed back to the left. This will prevent the player form being able to use the enemy
+     * as a platform if the enemy is outside of a bubble.
+     * 
+     * This should only be executed if the enemy isn't enclosed inside a bubble. Otherwise, the playr will still get knocked back
+     * even if the enemy is a bubble, so he won't be able to jump on top of a bubble as a platform.
+     */
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Check if the object colliding is the player
-        if (collision.gameObject.CompareTag("Player"))
+        // Check if the object colliding is the player, nd if the enemy is not in circle/bubble form
+        if (collision.gameObject.CompareTag("Player") && !isCircle)
         {
             // Get the Rigidbody2D of the player
             Rigidbody2D playerRb = collision.gameObject.GetComponent<Rigidbody2D>();
@@ -194,13 +202,66 @@ public class Enemy : MonoBehaviour
         isCircle = true;
 
         // Instantiate the circle GameObject at the enemy's position
-        GameObject circle = Instantiate(bubbleContainerPrefab, transform.position, Quaternion.identity);
+        currentBubble = Instantiate(bubbleContainerPrefab, transform.position, Quaternion.identity);
 
-        // This destroys the original enemy object with the original sprite, so that only the bubble container is left.
-        Destroy(gameObject);
+        //GameObject circle = Instantiate(bubbleContainerPrefab, transform.position, Quaternion.identity);
+
+        //// This destroys the original enemy object with the original sprite, so that only the bubble container is left.
+        //Destroy(gameObject);
 
         // Alternatively, disable the current enemy GameObject
-        // gameObject.SetActive(false);
+        gameObject.SetActive(false);
+
+        //// Start the coroutine to revert the transformation after 5 seconds
+        //StartCoroutine(RevertTransformation());
+    }
+
+
+    /* This will revert the transformation of the enemy back to its original form after a set amount of time.
+     * 
+     * That is, this will eliminate the bubble container, and re-render the enemy's original sprite.
+     * 
+     * To ensure the coroutine is executed when isCircle is set to true, you can start the coroutine within the 
+     * TransformIntoCircle method. Additionally, you can add a check to ensure the coroutine is only started if isCircle 
+     * is true.
+     * 
+     * Explanation:
+1.	The TransformIntoCircle method sets isCircle to true, instantiates the bubble, disables the enemy GameObject, and starts the RevertTransformation coroutine.
+2.	The RevertTransformation coroutine waits for 5 seconds, sets isCircle to false, destroys the bubble, and re-enables the enemy GameObject.
+3.	The Update method checks if isCircle is true and if the coroutine is not already running, then starts the coroutine.
+This ensures that the coroutine is executed when isCircle is set to true.
+     */
+
+    private IEnumerator RevertTransformation()
+    {
+        // Wait for 5 seconds
+        yield return new WaitForSeconds(5f);
+
+        // Set the isCircle flag to false
+        isCircle = false;
+
+        // Instantiate the enemy's original form GameObject at the bubble's position
+        currentBubble = Instantiate(bubbleContainerPrefab, transform.position, Quaternion.identity);
+
+        // Destroy the current bubble GameObject
+        Destroy(gameObject);
+
+        //// Re-enable the current enemy GameObject (the original enemy sprite)
+        //gameObject.SetActive(true);
+    }
+
+    /* Update method. This is executed 60 times per second.
+     *
+     * This will check if the enemy is in bubble form, and if it is, it will start the coroutine if not already started. The coroutine 
+     * will revert the transformation of the enemy back to its original form after 5 seconds, and make the bubble container to disappear.
+     */
+    private void Update()
+    {
+        // Check if the enemy is in circle form and start the coroutine if not already started
+        if (isCircle && !IsInvoking(nameof(RevertTransformation)))
+        {
+            StartCoroutine(RevertTransformation());
+        }
     }
 
     //private void OnCollisionStay2D(Collision2D collision)

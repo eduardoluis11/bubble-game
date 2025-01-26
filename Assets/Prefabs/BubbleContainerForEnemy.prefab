@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5034463882787707542}
   - component: {fileID: 2845477801136950487}
   - component: {fileID: 4971146190826189308}
+  - component: {fileID: 846486105320213121}
   m_Layer: 3
   m_Name: BubbleContainerForEnemy
   m_TagString: Untagged
@@ -130,3 +131,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &846486105320213121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8922364361194792525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ad974c2bc9b7674b9d25a794ec1031c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  knockbackDistance: 20
+  isCircle: 1
+  bubbleContainerPrefab: {fileID: 1823505429573643310, guid: 050cf9c1195fb5248b83deea66db6157, type: 3}
