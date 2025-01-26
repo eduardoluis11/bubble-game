@@ -42,9 +42,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Player
-    uniqueID: 3707651957
-    locked: 0
   - name: Door
     uniqueID: 2944001217
+    locked: 0
+  - name: Player
+    uniqueID: 3707651957
     locked: 0
