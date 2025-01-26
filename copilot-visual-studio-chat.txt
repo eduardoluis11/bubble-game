@@ -1,3 +1,44 @@
+Awesome. Now, add a snippet here in the start() function of PlayerHitbox.cs so that, when the "Hitbox" game object is created, it is assigned a tag to it called "PlayerHitbox".
+
+
+===
+
+To assign a tag to the "Hitbox" game object when it is created, you can use the tag property. Make sure the tag "PlayerHitbox" is already created in the Unity Editor under the Tags and Layers settings.
+Here's the updated Start method with the snippet to assign the tag:
+
+void Start()
+{
+    // Create the hitbox object
+    hitbox = new GameObject("Hitbox");
+    hitbox.transform.SetParent(transform); // Attach it to the player
+    hitbox.SetActive(false);
+
+    // Assign the tag "PlayerHitbox" to the hitbox object
+    hitbox.tag = "PlayerHitbox";
+
+    // Add a BoxCollider2D for the hitbox functionality
+    BoxCollider2D boxCollider = hitbox.AddComponent<BoxCollider2D>();
+    boxCollider.isTrigger = true;
+
+    // Add a SpriteRenderer for hitbox visualization (optional)
+    renderer = hitbox.AddComponent<SpriteRenderer>();
+    renderer.color = hitboxColor;
+    renderer.sprite = CreateHitboxSprite(); // Creates a simple square sprite
+    renderer.drawMode = SpriteDrawMode.Sliced;
+    renderer.size = hitboxSize;
+}
+
+
+
+Explanation:
+•	Added the line hitbox.tag = "PlayerHitbox"; to assign the tag "PlayerHitbox" to the hitbox game object when it is created.
+Make sure to create the "PlayerHitbox" tag in the Unity Editor before running the game.
+
+
+
+====================================================================================================================
+
+
   Nevermind. Just modify this code so that, instead of executing the ApplyKnockback() function, just make the player to move 20 units to the left whenever they collide with the enemy.
 
   ===

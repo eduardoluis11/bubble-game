@@ -38,7 +38,13 @@ using UnityEngine;
 2.	Set renderer.size = hitboxSize; in the Start method to initialize the size of the sprite.
 3.	Updated the UpdateHitbox method to set the renderer.size to hitboxSize.
 This should ensure that the hitbox is rendered correctly on the screen when the "E" key is pressed.
-You are using the active document because you have the checkmark checked. You can include additional context using # references. Typing # opens a completion list of available context.
+You are using the active document because you have the checkmark checked. You can include additional context using # references. 
+Typing # opens a completion list of available context.
+*
+* To assign a tag to the "Hitbox" game object when it is created, you can use the tag property. Make sure the tag "PlayerHitbox" 
+* is already created in the Unity Editor under the Tags and Layers settings.
+*
+*
  */
 
 public class PlayerHitbox : MonoBehaviour
@@ -60,6 +66,9 @@ public class PlayerHitbox : MonoBehaviour
         hitbox = new GameObject("Hitbox");
         hitbox.transform.SetParent(transform); // Attach it to the player
         hitbox.SetActive(false);
+
+        // Assign the tag "PlayerHitbox" to the hitbox object
+        hitbox.tag = "PlayerHitbox";
 
         // Add a BoxCollider2D for the hitbox functionality
         BoxCollider2D boxCollider = hitbox.AddComponent<BoxCollider2D>();
