@@ -145,7 +145,11 @@ public class Enemy : MonoBehaviour
     public bool isCircle = false; // Tracks whether the enemy is currently a circle
     public GameObject bubbleContainerPrefab; // Reference to the circle prefab to spawn
 
+    public GameObject enemysOriginalFormPrefab; // Reference to the enemy's original sprite prefab to spawn
+
     private GameObject currentBubble; // Reference to the current bubble instance as a "global" variable
+
+    private GameObject currentEnemy; // Reference to the current enemy's original form instance as a "global" variable
 
 
     /* This will make it so that, if the player collides with the enemy, the player will be pushed back to the left.
@@ -226,10 +230,10 @@ public class Enemy : MonoBehaviour
      * is true.
      * 
      * Explanation:
-1.	The TransformIntoCircle method sets isCircle to true, instantiates the bubble, disables the enemy GameObject, and starts the RevertTransformation coroutine.
-2.	The RevertTransformation coroutine waits for 5 seconds, sets isCircle to false, destroys the bubble, and re-enables the enemy GameObject.
-3.	The Update method checks if isCircle is true and if the coroutine is not already running, then starts the coroutine.
-This ensures that the coroutine is executed when isCircle is set to true.
+        1.	The TransformIntoCircle method sets isCircle to true, instantiates the bubble, disables the enemy GameObject, and starts the RevertTransformation coroutine.
+        2.	The RevertTransformation coroutine waits for 5 seconds, sets isCircle to false, destroys the bubble, and re-enables the enemy GameObject.
+        3.	The Update method checks if isCircle is true and if the coroutine is not already running, then starts the coroutine.
+        This ensures that the coroutine is executed when isCircle is set to true.
      */
 
     private IEnumerator RevertTransformation()
@@ -241,7 +245,7 @@ This ensures that the coroutine is executed when isCircle is set to true.
         isCircle = false;
 
         // Instantiate the enemy's original form GameObject at the bubble's position
-        currentBubble = Instantiate(bubbleContainerPrefab, transform.position, Quaternion.identity);
+        currentEnemy = Instantiate(enemysOriginalFormPrefab, transform.position, Quaternion.identity);
 
         // Destroy the current bubble GameObject
         Destroy(gameObject);

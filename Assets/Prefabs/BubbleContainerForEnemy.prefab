@@ -145,4 +145,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   knockbackDistance: 20
   isCircle: 1
-  bubbleContainerPrefab: {fileID: 1823505429573643310, guid: 050cf9c1195fb5248b83deea66db6157, type: 3}
+  bubbleContainerPrefab: {fileID: 8922364361194792525}
+  enemysOriginalFormPrefab: {fileID: 1823505429573643310, guid: 050cf9c1195fb5248b83deea66db6157, type: 3}
